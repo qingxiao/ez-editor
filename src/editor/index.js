@@ -1,7 +1,9 @@
 /**
  * Created by xiaoqing on 2017/7/18.
  */
+import React from 'react';
 import Layout from 'antd/lib/layout';
+import {Header, Footer, Sider, Content} from 'antd/lib/layout';
 import {Component} from 'react';
 class App extends Component {
     render() {

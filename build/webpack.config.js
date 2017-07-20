@@ -48,15 +48,14 @@ module.exports = function (env) {
                         })
                     }
                 },*/
-                /*   {
-                 // deac:'page/目录下的文件自动require(common/common)',
-                 test: /\.js/,
-                 loader: "imports-loader",
-                 include: [path.join(APP_PATH, 'page/')],
-                 query: {
-                 "__common": 'common/common',
-                 }
-                 },*/
+                {
+                    test: /\.(css|less)$/,
+                    use: [
+                        'style-loader',
+                        'css-loader'
+                    ]
+                },
+
                 {
                     test: /\.js/,
                     include: [APP_PATH, path.join(NODE_MODULES_PATH, 'antd')],
