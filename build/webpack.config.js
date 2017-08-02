@@ -29,7 +29,7 @@ module.exports = function (env) {
         output: {
             path: BUILD_PATH,
             //publicPath: '/view',
-            filename: '[name].js'
+            filename: '[name]-[hash].js'
         }
         ,
         externals: {
@@ -38,21 +38,29 @@ module.exports = function (env) {
         ,
         module: {
             rules: [
-               /* {
-                    test: /\.(css|less)$/,
-                    use: {
-                        loader: ExtractTextPlugin.extract({
-                            fallback: 'style-loader',
-                            use: 'css-loader!postcss-loader!less-loader?{"sourceMap":true}'
-                            //use: 'css-loader!postcss-loader!' + `less-loader?{"sourceMap":true,"modifyVars":${JSON.stringify(theme)}}`
-                        })
-                    }
-                },*/
+                /* {
+                 test: /\.(css|less)$/,
+                 use: {
+                 loader: ExtractTextPlugin.extract({
+                 fallback: 'style-loader',
+                 use: 'css-loader!postcss-loader!less-loader?{"sourceMap":true}'
+                 //use: 'css-loader!postcss-loader!' + `less-loader?{"sourceMap":true,"modifyVars":${JSON.stringify(theme)}}`
+                 })
+                 }
+                 },*/
                 {
                     test: /\.(css|less)$/,
+                    include: [APP_PATH, path.join(NODE_MODULES_PATH, 'antd')],
                     use: [
                         'style-loader',
-                        'css-loader'
+                        'css-loader',
+                        {
+                            loader: 'postcss-loader',
+                            options:{
+                                path:null,
+                            }
+                        },
+                        'less-loader',
                     ]
                 },
 
@@ -63,14 +71,14 @@ module.exports = function (env) {
                         loader: 'babel-loader',
                         options: {
                             presets: ['react', 'env'],
-                            "plugins": [["import", {"style": true, "libraryName": "antd"}]]
+                            "plugins": [["import", {"style": 'css', "libraryName": "antd"}]]
 
                         },
                     }
                 },
                 {
                     test: /\.html|xhtml$/,
-                    use:{
+                    use: {
                         loader: 'html-loader'
                     }
 
@@ -83,7 +91,7 @@ module.exports = function (env) {
                 {
                     test: /\.(svg)$/i,
                     include: path.join(NODE_MODULES_PATH, 'antd'),
-                    use:{
+                    use: {
                         loader: 'svg-sprite-loader',
                     }
                 }
@@ -113,7 +121,7 @@ module.exports = function (env) {
                 }
             })
 
-        ].concat(utils.getHtmlWebpackPlugin({cwd: APP_PATH}))
+        ].concat(/*utils.getHtmlWebpackPlugin({cwd: APP_PATH})*/)
     };
     //生产环境去掉sourceMap
     if (env.production) {
