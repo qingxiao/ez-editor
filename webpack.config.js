@@ -24,6 +24,8 @@ const svgDirs = [
 
 let entryFile = utils.getEntry('**/index.js', {cwd: APP_PATH});
 entryFile['common/frame'] = ['react', 'react-dom'];
+//
+console.log(entryFile);
 module.exports = function (env) {
     console.log(env)
     env = env || {};
@@ -36,7 +38,7 @@ module.exports = function (env) {
         output: {
             path: BUILD_PATH,
             //publicPath: '/view',
-            filename: '[name].js'
+            filename: '[name]-[hash:6].js'
         }
         ,
         externals: {
@@ -90,11 +92,18 @@ module.exports = function (env) {
                     }
 
                 },
-                /*  {
-                 test: /\.(jpe?g|png|gif|svg)$/i,
-                 loader: "@zbj/image-loader?limit=10240&name=[path][name].[ext]",
-                 exclude: path.join(NODE_MODULES_PATH, 'antd')
-                 },*/
+                {
+                    test: /\.(jpe?g|png|gif|svg)$/i,
+                    use: {
+                        loader: 'url-loader',
+                        options:{
+                            limit: 8192,
+                            name:'[name]-[hash:8].[ext]',
+                            outputPath:'img/'
+                        }
+                    }
+
+                },
                 {
                     test: /\.(svg)$/i,
                     include: path.join(NODE_MODULES_PATH, 'antd'),
@@ -111,20 +120,22 @@ module.exports = function (env) {
         }
         ,
         plugins: [
-            new CleanWebpackPlugin([path.join(APP_PATH, 'dist')]),
+            //先清除原来的dis目录
+            new CleanWebpackPlugin([path.join(ROOT_PATH, 'dist')]),
+            //静态资源表
             new ManifestPlugin(),
-            //todo
+            //html中插入对应index.js
             new HtmlWebpackPlugin({
-                title: 'Output Management',
-                filename: 'index.html',
-                files: {
-                    //  "css": ["main.css"],
-                    "js": ["src/index.js"],
-                },"chunks": {
-                    "body": {
-                        "entry": "src/index.js",
-                    }
+                filename:'index11.html',
+                template:path.join(APP_PATH, 'index11.html'),
+               // chunks:[publicpath],
+                inject: 'body',
+                //这里要匹配entry file
+                chunks:['common/frame', 'index']
+                /*files:{
+                    js:['index.js']
                 }
+*/
             }),
             new webpack.optimize.CommonsChunkPlugin('common/frame'),
             new ExtractTextPlugin("[name].css"),

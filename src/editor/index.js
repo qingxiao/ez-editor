@@ -7,6 +7,7 @@ import {Layout} from 'antd';
 import {Component} from 'react';
 //import 'antd/lib/layout/style/css';
 import './index.less';
+import noDataImg from './no-data.png';
 var {Header, Footer, Sider, Content} = Layout;
 class App extends Component {
     render() {
@@ -14,6 +15,7 @@ class App extends Component {
             <Layout>
                 <Header>header</Header>
                 <Layout>
+                    <img src={ noDataImg } />
                     <Sider>left sidebar</Sider>
                     <Content>main content</Content>
                     <Sider>right sidebar</Sider>
